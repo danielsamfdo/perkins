@@ -10,6 +10,7 @@ from datetime import datetime
 import pytz
 from django.views.decorators.csrf import csrf_exempt
 import redis as r
+from urllib.parse import parse_qs
 
 redis = r.StrictRedis()
 
@@ -34,10 +35,17 @@ def alexa(request):
 @csrf_exempt
 def plugin(request):
     if request.method == 'POST':
+        print(parse_qs(request.body.decode('utf-8')))
         redis.set("form", request.body['form'])
-        return HttpResponse("done")
+        return HttpResponse(json.dumps({'saved': True}),
+            content_type="application/json; charset=utf-8")
     
     elif request.method == 'GET':
         if not redis.exists('filled_form'):
             return HttpResponse(json.dumps({'ready': False}),
                 content_type="application/json; charset=utf-8")
+
+
+def render_test_html_form(request):
+    return render(request, "form.html")
+
