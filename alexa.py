@@ -55,7 +55,8 @@ def FillForm(session, query=''):
     kwargs['attributes']={}
     kwargs['attributes']['pair_examples']=str(pair_examples)
     kwargs['attributes']['curr_index']=str(0)
-    kwargs['message'] = str(title[0])+" form received. Please use the phrase Enter followed by the value, starting with "+str(pair_examples[0][index_copy][0])
+    kwargs['attributes']['answers']=str([])
+    kwargs['message'] = str(title[0])+" form received. Please use the phrase Enter followed by the value, starting with "+str(pair_examples[index_copy][0])
     #curr_index[0]+=1
     #kwargs['end_session']=False
     kwargs['attributes']['new']=False    
@@ -84,6 +85,7 @@ def AddForm(session,searchphrase=''):
     print('AAATTTRRR!!!!!!',session.keys(),session)
     pair_examples=str(session['attributes']['attributes']['pair_examples'])
     pair_examples=ast.literal_eval(pair_examples)
+    answer=ast.literal_eval(str(session['attributes']['attributes']['answers']))
     #pair_examples=[n.strip() for n in pair_examples]
     curr_index[0]=int(session['attributes']['attributes']['curr_index'])
 #    ci = open('/home/perkins/candle/curr_index.txt','r')
@@ -95,16 +97,23 @@ def AddForm(session,searchphrase=''):
     print(searchphrase)
     kwargs={}
     index_copy=curr_index[0]
+    answer.append(searchphrase)
+    kwargs['attributes']={}
+    kwargs['attributes']['answers']=str(answer)
     if index_copy>=len(pair_examples)-2:
         kwargs['message']=str(pair_examples[index_copy][0])+" has been filled. Form complete."
         kwargs['end_session']=True
+        print("uyfyfuy&&&&&&&&&&&&",kwargs['attributes']['answers'])        
     else:
         kwargs['message']=str(pair_examples[index_copy][0])+" has been filled. Next is "+str(pair_examples[index_copy+1][0])
         kwargs['end_session']=False
     curr_index[0]+=1
-    kwargs['attributes']={}
+    #answer.append(searchphrase)
+    #kwargs['attributes']={}
     kwargs['attributes']['curr_index']=str(curr_index[0])
     kwargs['attributes']['pair_examples']=str(pair_examples)
+    #kwargs['attributes']['answers']=str(answer)
+    #kwargs['attributes']['a']
 #    cw = open('/home/perkins/candle/curr_index.txt','w')
  #   write(str(curr_index[0])
    # cw.close()

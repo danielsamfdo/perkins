@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import pytz
 from django.views.decorators.csrf import csrf_exempt
+import redis as r
+
+redis = r.StrictRedis()
 
 
 def main(request):
@@ -31,5 +34,10 @@ def alexa(request):
 @csrf_exempt
 def plugin(request):
     if request.method == 'POST':
-        print(request.POST)
-        return HttpResponse("test")
+        redis.set("form", request.body['form'])
+        return HttpResponse("done")
+    
+    elif request.method == 'GET':
+        if not redis.exists('filled_form'):
+            return HttpResponse(json.dumps({'ready': False}),
+                content_type="application/json; charset=utf-8")
