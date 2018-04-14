@@ -27,3 +27,9 @@ def alexa(request):
       "redirectionUrl": url
     }
     return HttpResponse(json.dumps(d), content_type="application/json; charset=utf-8")
+
+@csrf_exempt
+def plugin(request):
+    if request.method == 'POST':
+        print(request.POST)
+        return HttpResponse("test")
