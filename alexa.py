@@ -1,5 +1,15 @@
 from django_alexa.api import fields, intent, ResponseBuilder
 
+namefields=("Name","Name Field")
+phonefields=("Phone Field")
+categories=("Hospital","")
+
+
+class FieldsForFormsSlots(fields.AmazonSlots):
+    NameField=fields.AmazonCustom(label="NameField", choices=namefields)
+    PhoneField=fields.AmazonCustom(label="PhoneField",choices=phonefields)
+    Category=fields.AmazonCustom(label="Category",choices=categories)
+    query = fields.AmazonSearchQuery()
 
 @intent
 def LaunchRequest(session):
@@ -16,15 +26,13 @@ def LaunchRequest(session):
                                            end_session=False,
                                            launched=True)
 
-@intent
-def FillForm(session):
+@intent(slots=FieldsForFormsSlots)
+def FillForm(session,query):
+    print query
     return ResponseBuilder.create_response(message="",
                                            reprompt="What house would you like to give points to?",
                                            end_session=False,
                                            launched=True)
 
-namefields=("Name","Name Field")
-phonefields=("Phone Field")
-class FieldsForFormsSlots(fields.AmazonSlots):
-    NameField=fields.AmazonCustom(label="NameField", choices=namefields)
-    PhoneField=fields.AmazonCustom(label="PhoneField",choices=phonefields)
+
+
